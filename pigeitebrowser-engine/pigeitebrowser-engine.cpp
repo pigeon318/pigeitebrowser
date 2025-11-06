@@ -2,6 +2,7 @@
 #include <string>
 #include <cstring>
 #include <curl/curl.h>
+#include "html_parser.cpp"
 
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
     std::string* s = static_cast<std::string*>(userp);
@@ -64,11 +65,10 @@ int main(int argc, char* argv[]) {
             std::cerr << '\n';
         }
         else {
-            std::cout << "---- HTML START ----\n";
-            std::cout << buf.substr(0, 1000);
-            if (buf.size() > 1000) std::cout << "\n... [output truncated]\n";
-            std::cout << "\n---- HTML END ----\n\n";
+            Node* dom = parseHTML(buf);
+            printDOM(dom);
         }
+
 
         curl_easy_cleanup(curl);
     }
